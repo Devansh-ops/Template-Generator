@@ -11,7 +11,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = Flask(__name__)
 
-def create_prompt(recipient_name, email_subject, key_points, tone, additional_instructions):
+def create_prompt(key_points, tone, additional_instructions):
     return {
         "model": "gpt-3.5-turbo",
         "messages": [
@@ -21,7 +21,7 @@ def create_prompt(recipient_name, email_subject, key_points, tone, additional_in
             },
             {
                 "role": "user",
-                "content": f"Create an email template addressing {recipient_name} with the subject '{email_subject}'. The key points to include are: {key_points}. The tone should be {tone}. Additional instructions: {additional_instructions}. The email should be professional and suitable for a business context."
+                "content": f"Create an email template addressing [recipient_name]. Generate the subject line on your own. The key points to include are: {key_points}. The tone should be {tone}. Additional instructions: {additional_instructions}. The email should be professional and suitable for a business context."
             }
         ]
     }
@@ -34,8 +34,6 @@ def index():
 def generate_template():
     data = request.get_json()
     prompt = create_prompt(
-        data['recipientName'],
-        data['emailSubject'],
         data['keyPoints'],
         data['tone'],
         data['additionalInstructions']
